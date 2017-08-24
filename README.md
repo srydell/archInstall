@@ -1,7 +1,8 @@
 # This is a description of how to install Simons Arch setup
-## Install i3-gaps as a window manager
 
-## Install apacman for AUR repositories
+## -- Install i3-gaps as a window manager --
+
+## -- Install apacman for AUR repositories --
 
 ### Install git to be able to download apacman
 pacman -S git
@@ -15,7 +16,7 @@ cd ./apacman
 cd ..
 sudo -R apacman
 
-## Install i3-gaps as a window manager
+## -- Install i3-gaps as a window manager --
 
 ### First install i3 to get the dependencies
 pacman -S i3
