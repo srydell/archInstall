@@ -6,9 +6,11 @@
    '''$ pacman -S git'''
 
    * ### Download apacman, install apacman
-   '''$ git clone https://github.com/oshazard/apacman.git
-      $ cd ./apacman
-      $ ./apacman -S apacman'''
+         '''Shell
+         $ git clone https://github.com/oshazard/apacman.git
+         $ cd ./apacman
+         $ ./apacman -S apacman
+         '''
 
    * ### Delete the apacman directory as it is installed
    '''$ cd ..
