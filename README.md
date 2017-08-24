@@ -19,6 +19,7 @@ Make sure that you have an ethernet cable and that EFI mode is set through BIOS.
 I have a Windows install on the same disk. We will create a root partition, a boot partition and a swap partition. No grub partition will be created since according to [Arch wiki](https://wiki.archlinux.org/index.php/GRUB) you can use the efi partition created by Windows.
 
    * ### Checking the current disk partitioning
+
          $ lblk
 
          This should give you a list of partitions. I have a ssd so for me is says:
@@ -31,6 +32,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
         Where the first four is Windows partitions, so the fifth will become Linux. These are refered to as /dev/sdaN, where N is 1-5.
 
    * ### Create disk partitions for Linux.
+
          $ cgdisk /dev/sda
 
          You will be presented with a text based program to partition /dev/sda. Select the Partition Type *free space* and press New. Press Enter to choose the default start sector. Write '1024MiB' and choose code 'EF00' for EFI system. Name this partition 'boot'.
@@ -40,6 +42,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          You can now press Write and then Quit to exit the application.
 
    * ### Creating the file systems
+
          $ mkfs.fat -F32 /dev/sda5
          $ mkswap /dev/sda6
          $ swapon /dev/sda6
