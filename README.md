@@ -78,8 +78,8 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
 * ## Install apacman for AUR repositories
 
-   * ### Install git to be able to download apacman
-         $ pacman -S git
+   * ### Install git to be able to download apacman, and jshon and wget to use it
+         $ pacman -S git jshon wget
 
    * ### Download apacman, install apacman
          $ git clone https://github.com/oshazard/apacman.git
@@ -87,8 +87,8 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          $ ./apacman -S apacman
 
    * ### Delete the apacman directory as it is installed
-         $ cd
-         $ sudo -R apacman
+         $ cd ..
+         $ sudo rm -R apacman
 
 * ## Install i3-gaps as a window manager
 
