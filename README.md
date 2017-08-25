@@ -90,6 +90,176 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
          $ nano /mnt/etc/fstab
          
+   * ### Change root into your system and set up your locals
+
+         $ arch-chroot /mnt
+
+         For language create a locale.gen file.
+
+         $ nano /etc/locale.gen
+
+         Uncomment your locale. I uncommented en_US.UTF-8. Generate the locale.
+
+         $ locale-gen
+
+         Set your language
+
+         $ echo LANG=en_US.UTF-8 > /etc/locale.conf
+         $ export LANG=en_US.UTF-8
+
+         Set a symbolic link to your time zone. Each time zone can be found in /usr/share/zoneinfo/
+
+         $ ln -s /usr/share/zoneinfo/your-time-zone > /etc/localtime
+
+         Set hardware clock to utc
+
+         $ hwclock --systohc --utc
+
+         Set up your hostname.
+
+         $ echo hostName > /etc/hostname
+
+         If you have a SSD then you might want to enable TRIM support.
+
+         $ systemctl enable fstrim.timer
+
+   * ### Setup pacman and user configuration
+         
+         Open pacman.conf and uncomment support for multilib (if you want to install 32bit programs)
+
+         $ nano /etc/pacman.conf
+
+         Here you uncomment the two lines marked as
+         [multilib]
+         Include = /etc/pacman.d/mirrorlist
+
+         Save the file and update your system
+
+         $ pacman -Sy
+
+         Setup a root password
+
+         $ passwd
+
+         Now add users to the groups wheel,storage,power
+
+         $ useradd -m -g users -G wheel,storage,power -s /bin/bash someUsername
+
+         Set a password for that user
+
+         $ passwd someUsername
+
+         Setup which users can use the sudo command
+
+         $ EDITOR=nano visudo
+
+         Uncomment 
+         %wheel ALL=(ALL) ALL
+
+         At the end of the file add
+         Defaults rootpw
+
+         Install the bootloader. First check that EFI variables are mounted.
+
+         $ mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+
+         If it says that they are already mounted, you're good to go!
+
+         Install the bootloader
+
+         $ bootctl install
+
+         We need to know our root partition. Mine is sda7. You can see all partition by typing "lblk". Create an arch.conf file.
+
+         $ nano /boot/loader/entries/arch.conf
+
+         Add these lines:
+
+         title Arch Linux
+         linux /vmlinuz-linux
+         initrd /initramfs-linux.img
+
+         Save and close this file. We need to add the root partition PARTUUID to this file. This is easiest done by a shell command.
+
+         $ echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/sda7) rw" >> /boot/loader/entries/arch.conf
+
+         Where you change /dev/sda7 to your root partition.
+         
+             If you have an intel processor you need to install intel-ucode.
+
+             $ pacman -S intel-ucode
+
+             Then you need to add another line to the arch.conf
+
+             $ sudo nano /boot/loader/entries/arch.conf
+
+             Add the line "initrd /intel-ucode.img" before "initrd /initramfs-linux.img"
+
+        Now we need to enable dhcpcd at system start.
+
+        $ ip link
+
+        Check for your address. It looks like "enpXXsY".
+
+        $ sudo systemctl enable dhcpcd@enpXXsY.service
+
+        Download networkmanager and enable it.
+
+        $ sudo pacman -S NetworkManager
+        $ sudo systemctl enable NetworkManager.service
+
+        Some programs need to have headers installed.
+
+        $ sudo pacman -S linux-headers
+
+        I like the open source drivers [Nouveau](https://wiki.archlinux.org/index.php/nouveau) as a driver for Nvidia cards.
+
+        $ sudo pacman -S xf86-video-nouveau lib32-mesa
+
+        You should now be able to reboot your system. Exit to arch root, unmount all drives and reboot the system.
+
+        $ exit
+        $ umount -R /mnt
+        $ reboot
+
+        You should now be able to boot in and see a login screen.
+
+        Now install xorg as a background for i3.
+
+        $ sudo pacman -S xorg-server xorg-apps xorg-xinit xorg-twm xorg-xclock xterm
+
+        Make sure that it works.
+
+        $ startx
+
+        It should run three terminals and a clock. Your mouse should now work aswell.
+
+   * ### Optimize your system
+
+        Install ccache to make compiling a lot faster. We will also set up the system to utilize all the cores. First, find out how many cores are available (this is the number of threads you have if your cpu supports hyperthreading).
+
+        $ lscpu
+
+        This command should show you a list of information about your cpu. Find the line called "CPU(s): XX". For me XX=12 since I have a AMD Ryzen 5 1600x. Install ccache.
+
+        $ sudo pacman -S ccache
+
+        Enable ccache and set our flags in makepkg.conf
+
+        $ sudo nano /etc/makepkg.conf
+
+        Find the line with "BUILDENV='... !ccache ...'. Remove ! in front of ccache to enable it. Find the line with "MAKEFLAGS=" and change it into 
+        MAKEFLAGS="-j13 -l12"
+        Where -j(XX+1) -lXX, where XX is the number you got from the "lscpu" command earlier.
+
+        Utilize the optimization outside of the package managers.
+
+        $ nano ~/.bashrc
+
+        Add these lines to the end of the file
+        export PATH="/usr/lib/ccache/bin/:$PATH"
+        export MAKEFLAGS="-j13 -l12"
+        Where you of course change -j and -l to your values.
 
 * ## Install apacman for AUR repositories
 
