@@ -195,71 +195,71 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
              Add the line "initrd /intel-ucode.img" before "initrd /initramfs-linux.img"
 
-        Now we need to enable dhcpcd at system start.
+         Now we need to enable dhcpcd at system start.
 
-        $ ip link
+         $ ip link
 
-        Check for your address. It looks like "enpXXsY".
+         Check for your address. It looks like "enpXXsY".
 
-        $ sudo systemctl enable dhcpcd@enpXXsY.service
+         $ sudo systemctl enable dhcpcd@enpXXsY.service
 
-        Download networkmanager and enable it.
+         Download networkmanager and enable it.
 
-        $ sudo pacman -S NetworkManager
-        $ sudo systemctl enable NetworkManager.service
+         $ sudo pacman -S NetworkManager
+         $ sudo systemctl enable NetworkManager.service
 
-        Some programs need to have headers installed.
+         Some programs need to have headers installed.
 
-        $ sudo pacman -S linux-headers
+         $ sudo pacman -S linux-headers
 
-        I like the open source drivers [Nouveau](https://wiki.archlinux.org/index.php/nouveau) as a driver for Nvidia cards.
+         I like the open source drivers [Nouveau](https://wiki.archlinux.org/index.php/nouveau) as a driver for Nvidia cards.
 
-        $ sudo pacman -S xf86-video-nouveau lib32-mesa
+         $ sudo pacman -S xf86-video-nouveau lib32-mesa
 
-        You should now be able to reboot your system. Exit to arch root, unmount all drives and reboot the system.
+         You should now be able to reboot your system. Exit to arch root, unmount all drives and reboot the system.
 
-        $ exit
-        $ umount -R /mnt
-        $ reboot
+         $ exit
+         $ umount -R /mnt
+         $ reboot
 
-        You should now be able to boot in and see a login screen.
+         You should now be able to boot in and see a login screen.
 
-        Now install xorg as a background for i3.
+         Now install xorg as a background for i3.
 
-        $ sudo pacman -S xorg-server xorg-apps xorg-xinit xorg-twm xorg-xclock xterm
+         $ sudo pacman -S xorg-server xorg-apps xorg-xinit xorg-twm xorg-xclock xterm
 
-        Make sure that it works.
+         Make sure that it works.
 
-        $ startx
+         $ startx
 
-        It should run three terminals and a clock. Your mouse should now work aswell.
+         It should run three terminals and a clock. Your mouse should now work aswell.
 
    * ### Optimize your system
 
-        Install ccache to make compiling a lot faster. We will also set up the system to utilize all the cores. First, find out how many cores are available (this is the number of threads you have if your cpu supports hyperthreading).
+         Install ccache to make compiling a lot faster. We will also set up the system to utilize all the cores. First, find out how many cores are available (this is the number of threads you have if your cpu supports hyperthreading).
 
-        $ lscpu
+         $ lscpu
 
-        This command should show you a list of information about your cpu. Find the line called "CPU(s): XX". For me XX=12 since I have a AMD Ryzen 5 1600x. Install ccache.
+         This command should show you a list of information about your cpu. Find the line called "CPU(s): XX". For me XX=12 since I have a AMD Ryzen 5 1600x. Install ccache.
 
-        $ sudo pacman -S ccache
+         $ sudo pacman -S ccache
 
-        Enable ccache and set our flags in makepkg.conf
+         Enable ccache and set our flags in makepkg.conf
 
-        $ sudo nano /etc/makepkg.conf
+         $ sudo nano /etc/makepkg.conf
 
-        Find the line with "BUILDENV='... !ccache ...'. Remove ! in front of ccache to enable it. Find the line with "MAKEFLAGS=" and change it into 
-        MAKEFLAGS="-j13 -l12"
-        Where -j(XX+1) -lXX, where XX is the number you got from the "lscpu" command earlier.
+         Find the line with "BUILDENV='... !ccache ...'. Remove ! in front of ccache to enable it. Find the line with "MAKEFLAGS=" and change it into 
+         MAKEFLAGS="-j13 -l12"
+         Where -j(XX+1) -lXX, where XX is the number you got from the "lscpu" command earlier.
 
-        Utilize the optimization outside of the package managers.
+         Utilize the optimization outside of the package managers.
 
-        $ nano ~/.bashrc
+         $ nano ~/.bashrc
 
-        Add these lines to the end of the file
-        export PATH="/usr/lib/ccache/bin/:$PATH"
-        export MAKEFLAGS="-j13 -l12"
-        Where you of course change -j and -l to your values.
+         Add these lines to the end of the file
+         export PATH="/usr/lib/ccache/bin/:$PATH"
+         export MAKEFLAGS="-j13 -l12"
+         Where you of course change -j and -l to your values.
 
 * ## Install apacman for AUR repositories
 
