@@ -76,6 +76,21 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          
          $ rankmirrors -n 6 /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist
 
+   * ### Install Arch base and development files
+
+         $ pacstrap -i /mnt base base-devel
+
+   * ### Generate fstab file
+
+         This will make sure that the mountpoints are remembered when rebooting later.
+
+         $ genfstab -U -p /mnt >> /mnt/etc/fstab
+
+         Make sure that every partition is there.
+
+         $ nano /mnt/etc/fstab
+         
+
 * ## Install apacman for AUR repositories
 
    * ### Install git to be able to download apacman
