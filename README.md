@@ -4,6 +4,8 @@ This guide is mostly set up for myself so that I can learn more about the proces
 
 This guide assumes you have a live disk of Arch linux on a usb stick. Otherwise these can be found [here](https://www.archlinux.org/download/). It will teach you to install Arch Linux alongside an existing partition of Windows. It will utilize Grub to switch between these. Large thanks to [gloriouseggroll](https://www.gloriouseggroll.tv/) for large parts of this guide.
 
+Don't forget to disable fast boot in Windows to ensure that files are saved in Windows when switching OS.
+
 * ## Verifying internet and EFI is set correctly
 
 Make sure that you have an ethernet cable and that EFI mode is set through BIOS.
@@ -289,3 +291,8 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
    * ### Set i3 to start on startx command
          $ echo "exec i3" > ~/.xinitrc
+
+* ## Rice the system
+
+   * ### For setting background
+         $ pacman -S feh
