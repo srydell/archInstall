@@ -269,8 +269,8 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
 * ## Install apacman for AUR repositories
 
-   * ### Install git to be able to download apacman, and jshon, expac and wget to use it
-         $ pacman -S git jshon expac wget
+   * ### Install git to be able to download apacman, and jshon and wget to use it
+         $ pacman -S git jshon wget
 
    * ### Download apacman, install apacman
          $ git clone https://github.com/oshazard/apacman.git
@@ -284,7 +284,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 * ## Install i3-gaps as a window manager
 
    * ### First install i3 to get the dependencies
-         $ sudo pacman -S i3
+         $ pacman -S i3
 
    * ### Use apacman to download i3-gaps and remove i3wm when asked
          $ apacman -S i3-gaps
@@ -296,3 +296,6 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
    * ### For setting background
          $ pacman -S feh
+
+   * ### Font
+         $ apacman -S ttf-iosevka
