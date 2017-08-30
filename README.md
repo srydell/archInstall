@@ -292,10 +292,13 @@ I have a Windows install on the same disk. We will create a root partition, a bo
    * ### Set i3 to start on startx command
          $ echo "exec i3" > ~/.xinitrc
 
-* ## Rice the system
+* ## Make the system more user friendly
 
    * ### For setting background
          $ pacman -S feh
 
    * ### Font
          $ apacman -S ttf-iosevka
+
+   * ### Browser
+         $ pacman -S qutebrowser
