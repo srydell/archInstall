@@ -294,11 +294,19 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
 * ## Make the system more user friendly
 
+   * ### Sound control
+         $ pacman -S pulseaudio
+
+   * ### Configure multiple monitor with arandr. It creates xrandr configuration files from a GUI.
+         Save the config file and add it to your i3 config file as an "exec". This way the configuration will be used each time you log in to your system.
+         $ pacman -S arandr
+
    * ### For setting background
          $ pacman -S feh
 
    * ### Font
          $ apacman -S ttf-iosevka
 
-   * ### Browser
+   * ### Browser, (gst for playing youtube videos)
          $ pacman -S qutebrowser
+         $ pacman -S gst-plugins-{base,good,bad,ugly} gst-libav
