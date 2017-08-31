@@ -55,7 +55,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 * ## Mount and install Arch
 
    * ### Mounting partitions
-         
+
          Remember the number of the EFI system on windows. We will create a connection between Windows and Linux there that Grub will use. For me, this partition is /dev/sda2.
 
          $ mount /dev/sda7 /mnt
@@ -65,7 +65,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          $ mount /dev/sda2 /mnt/boot/efi
 
    * ### Setting up Arch repository mirrorlist
-         
+
          Find the closest mirror to optimize package installation. First make a backup of the current mirrorlist.
 
          $ cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
@@ -75,7 +75,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          $ sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.backup
 
          Rank the top 6 mirrors and leave them uncommented. This will take a while.
-         
+
          $ rankmirrors -n 6 /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist
 
    * ### Install Arch base and development files
@@ -91,7 +91,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          Make sure that every partition is there.
 
          $ nano /mnt/etc/fstab
-         
+
    * ### Change root into your system and set up your locals
 
          $ arch-chroot /mnt
@@ -126,7 +126,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          $ systemctl enable fstrim.timer
 
    * ### Setup pacman and user configuration
-         
+
          Open pacman.conf and uncomment support for multilib (if you want to install 32bit programs)
 
          $ nano /etc/pacman.conf
@@ -155,7 +155,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
          $ EDITOR=nano visudo
 
-         Uncomment 
+         Uncomment
          %wheel ALL=(ALL) ALL
 
          At the end of the file add
@@ -186,7 +186,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          $ echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/sda7) rw" >> /boot/loader/entries/arch.conf
 
          Where you change /dev/sda7 to your root partition.
-         
+
              If you have an intel processor you need to install intel-ucode.
 
              $ pacman -S intel-ucode
@@ -250,7 +250,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
          $ sudo nano /etc/makepkg.conf
 
-         Find the line with "BUILDENV='... !ccache ...'. Remove ! in front of ccache to enable it. Find the line with "MAKEFLAGS=" and change it into 
+         Find the line with "BUILDENV='... !ccache ...'. Remove ! in front of ccache to enable it. Find the line with "MAKEFLAGS=" and change it into
          MAKEFLAGS="-j13 -l12"
          Where -j(XX+1) -lXX, where XX is the number you got from the "lscpu" command earlier.
 
@@ -301,11 +301,18 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          Save the config file and add it to your i3 config file as an "exec". This way the configuration will be used each time you log in to your system.
          $ pacman -S arandr
 
+   * ### Font
+         $ apacman -S ttf-iosevka
+
+   * ### Application launcher
+         Start this application with "rofi -show run"
+         $ apacman -S rofi
+
    * ### For setting background
          $ pacman -S feh
 
-   * ### Font
-         $ apacman -S ttf-iosevka
+   * ### PDF-reader
+         $ pacman -S mupdf
 
    * ### Browser, (gst for playing youtube videos)
          $ pacman -S qutebrowser
