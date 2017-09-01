@@ -294,15 +294,21 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
 * ## Make the system more user friendly
 
+   * ### Font
+         $ apacman -S ttf-iosevka
+
+   * ### Fade out cursor
+         $ pacman -S unclutter
+
+   * ### Terminal multiplexor
+         $ pacman -S tmux
+
    * ### Sound control
          $ pacman -S pulseaudio
 
    * ### Configure multiple monitor with arandr. It creates xrandr configuration files from a GUI.
          Save the config file and add it to your i3 config file as an "exec". This way the configuration will be used each time you log in to your system.
          $ pacman -S arandr
-
-   * ### Font
-         $ apacman -S ttf-iosevka
 
    * ### Application launcher
          Start this application with "rofi -show run"
