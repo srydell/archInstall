@@ -207,7 +207,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
          Download networkmanager and enable it.
 
-         $ sudo pacman -S NetworkManager
+         $ sudo pacman -S networkmanager
          $ sudo systemctl enable NetworkManager.service
 
          Some programs need to have headers installed.
