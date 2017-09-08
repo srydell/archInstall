@@ -22,7 +22,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
    * ### Checking the current disk partitioning
 
-         $ lblk
+         $ lsblk
 
          This should give you a list of partitions. I have a ssd so for me is says:
          sda
