@@ -324,6 +324,5 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          $ pacman -S qutebrowser
          $ pacman -S gst-plugins-{base,good,bad,ugly} gst-libav
    
-   * ### Password manager (dependencies: Java Dev kit)
-         $ pacman -S jdk8-openjdk
-         $ apacman -S jpwdhash
+   * ### Password manager
+         $ pacman -S pass gnupg
