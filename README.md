@@ -323,12 +323,18 @@ I have a Windows install on the same disk. We will create a root partition, a bo
    * ### Browser, (gst for playing youtube videos)
          $ pacman -S qutebrowser
          $ pacman -S gst-plugins-{base,good,bad,ugly} gst-libav
-   
+
    * ### Password manager
          $ pacman -S pass gnupg
-   
+
    * ### File manager
          $ pacman -S ranger
-         
+
    * ### Statur bar
          $ apacman -S polybar
+
+   * ### Editor
+         $ pacman -S vim
+
+   * ### For youcompleteme's autocompletion windows
+         $ apacman -S ncurses5-compat-libs
