@@ -336,5 +336,11 @@ I have a Windows install on the same disk. We will create a root partition, a bo
    * ### Editor
          $ pacman -S vim
 
+   * ### For tk windows in plotting programs such as matplotlib from python
+         $ pacman -S tk
+
    * ### For youcompleteme's autocompletion windows
          $ apacman -S ncurses5-compat-libs
+
+   * ### For latex
+         $ pacman -S texlive-most texlive-lang
