@@ -2,7 +2,7 @@
 
 This guide is mostly set up for myself so that I can learn more about the process. Any suggestions or improvements are welcome!
 
-This guide assumes you have a live disk of Arch linux on a usb stick. Otherwise these can be found [here](https://www.archlinux.org/download/). It will teach you to install Arch Linux alongside an existing partition of Windows. It will utilize Grub to switch between these.
+This guide assumes you have a live disk of Arch linux on a usb stick. Otherwise these can be found [here](https://www.archlinux.org/download/). It will teach you to install Arch Linux alongside an existing partition of Windows.
 
 Don't forget to disable fast boot in Windows to ensure that files are saved in Windows when switching OS.
 
@@ -18,7 +18,7 @@ Make sure that you have an ethernet cable and that EFI mode is set through BIOS.
 
 * ## Disk partitioning
 
-I have a Windows install on the same disk. We will create a root partition, a boot partition and a swap partition. No grub partition will be created since according to [Arch wiki](https://wiki.archlinux.org/index.php/GRUB) you can use the efi partition created by Windows.
+I have a Windows install on the same disk. We will create a root partition, a boot partition and a swap partition.
 
    * ### Checking the current disk partitioning
 
@@ -31,7 +31,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
             sda3
             sda4
             sda5
-        Where the first four is Windows partitions, so the fifth will become Linux. These are refered to as /dev/sdaN, where N is 1-5.
+        These are refered to as /dev/sdaN, where N is 1-5. The first four is Windows partitions, so the fifth will become the first associated with Linux.
 
    * ### Create disk partitions for Linux.
 
@@ -40,7 +40,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          You will be presented with a text based program to partition /dev/sda. Select the Partition Type *free space* and press New. Press Enter to choose the default start sector. Write '1024MiB' and choose code 'EF00' for EFI system. Name this partition 'boot'.
          Make another partition for swap space. The size depends on your amount of RAM. For me, since I have 16 GiB I can safely choose 8GiB of swap space. The code for swap is '8200', and name is 'swap'.
          Make one last partition with the rest of the sectors (press Enter two times to default to all sectors) and the default code '8300' and call it 'root'.
-         Take note of which partition is stored on which number. Also note down the number of the Windows partition that is described with the Partition Type *EFI System*. It is usually arount 100 MiB. Mine is /dev/sda2. This will be used by Grub later.
+         Take note of which partition is stored on which number.
          You can now press Write and then Quit to exit the application.
 
    * ### Creating the file systems
@@ -55,8 +55,6 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 * ## Mount and install Arch
 
    * ### Mounting partitions
-
-         Remember the number of the EFI system on windows. We will create a connection between Windows and Linux there that Grub will use. For me, this partition is /dev/sda2.
 
          $ mount /dev/sda7 /mnt
          $ mkdir /mnt/boot
