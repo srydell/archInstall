@@ -345,3 +345,6 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
    * ### For latex compilation
          $ apacman -S rubber
+
+   * ### Offline documentation browser
+         $ pacman -S zeal
