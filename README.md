@@ -261,9 +261,9 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          export MAKEFLAGS="-j13 -l12"
          Where you of course change -j and -l to your values.
 
-         Now we can install our terminal emulator. I prefer [urxvt](https://wiki.archlinux.org/index.php/Rxvt-unicode).
+         Now we can install our terminal emulator. I prefer [urxvt](https://wiki.archlinux.org/index.php/Rxvt-unicode). urxvt-perls are some preferred librarier (url-select, keyboard-select).
 
-         $ pacman -S rxvt-unicode
+         $ pacman -S rxvt-unicode urxvt-perls
 
 * ## Install apacman for AUR repositories
 
