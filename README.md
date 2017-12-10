@@ -59,8 +59,6 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          $ mount /dev/sda7 /mnt
          $ mkdir /mnt/boot
          $ mount /dev/sda5 /mnt/boot
-         $ mkdir /mnt/boot/efi
-         $ mount /dev/sda2 /mnt/boot/efi
 
    * ### Setting up Arch repository mirrorlist
 
