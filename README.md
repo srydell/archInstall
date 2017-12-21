@@ -286,6 +286,9 @@ I have a Windows install on the same disk. We will create a root partition, a bo
    * ### Use apacman to download i3-gaps and remove i3wm when asked
          $ apacman -S i3-gaps
 
+   * ### Perl scripts to interact with i3
+         $ pacman -S perl-anyevent-i3 perl-json-xs
+
    * ### Set i3 to start on startx command
          $ echo "exec i3" > ~/.xinitrc
 
