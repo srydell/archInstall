@@ -264,6 +264,10 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          $ pacman -S rxvt-unicode urxvt-perls
          $ apacman -S urxvt-resize-font-git
 
+	 Finally ssh for remote access
+	 
+	 $ pacman -S openssh
+
 * ## Install apacman for AUR repositories
 
    * ### Install git to be able to download apacman, and jshon and wget to use it
