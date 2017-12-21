@@ -262,6 +262,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          Now we can install our terminal emulator. I prefer [urxvt](https://wiki.archlinux.org/index.php/Rxvt-unicode). urxvt-perls are some preferred librarier (url-select, keyboard-select).
 
          $ pacman -S rxvt-unicode urxvt-perls
+         $ apacman -S urxvt-resize-font-git
 
 * ## Install apacman for AUR repositories
 
