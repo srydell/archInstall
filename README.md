@@ -266,7 +266,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
 	 Download zsh
 
-	 $ pacman -S zsh
+	 $ pacman -S zsh zsh-completions
 
 	 Finally ssh for remote access
 	 
