@@ -322,6 +322,9 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          Start this application with "rofi -show run"
          $ apacman -S rofi
 
+   * ### Watching files for changes and running commands on events
+         $ apacman -S entr
+
    * ### For setting background
          $ pacman -S feh
 
