@@ -306,7 +306,10 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          $ apacman -S ttf-iosevka ttf-croscore
 
    * ### Fade out cursor
-         $ pacman -S unclutter
+         $ apacman -S unclutter-xfixes-git
+
+   * ### Project indexer
+         $ pacman -S ctags
 
    * ### Terminal multiplexor
          $ pacman -S tmux
