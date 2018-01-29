@@ -373,3 +373,6 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
    * ### Maim for screenshots
          $ pacman -S maim
+
+   * ### Changing document format from one to another
+         $ pacman -S pandoc
