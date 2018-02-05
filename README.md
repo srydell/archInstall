@@ -302,6 +302,9 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
 * ## Make the system more user friendly
 
+   * ### X11 scripting tool
+         $ pacman -S xdotool
+
    * ### Font
          $ apacman -S ttf-iosevka ttf-croscore
 
@@ -376,3 +379,9 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
    * ### Changing document format from one to another
          $ pacman -S pandoc
+
+   * ### Node.js and npm for javascript development
+         $ pacman -S npm
+
+   * ### tern for javascript autocompletion
+         $ npm install -g tern
