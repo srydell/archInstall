@@ -385,3 +385,6 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
    * ### tern for javascript autocompletion
          $ npm install -g tern
+
+   * ### For formatting of html, css and javascript
+         $ pip3 install jsbeautifier
