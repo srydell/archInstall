@@ -368,9 +368,6 @@ I have a Windows install on the same disk. We will create a root partition, a bo
    * ### For latex compilation
          $ apacman -S rubber
 
-   * ### Offline documentation browser
-         $ pacman -S zeal
-
    * ### Taskwarrior for task management
          $ pacman -S task
 
@@ -388,3 +385,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
    * ### For formatting of html, css and javascript
          $ pip3 install jsbeautifier
+
+   * ### tmux project manager
+         $ pip install tmuxp
+
