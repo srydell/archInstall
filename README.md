@@ -389,3 +389,6 @@ I have a Windows install on the same disk. We will create a root partition, a bo
    * ### tmux project manager
          $ pip install tmuxp
 
+   * ### for checking shell scripts
+         $ pacman -S shellcheck
+
