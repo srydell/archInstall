@@ -113,6 +113,10 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
          $ hwclock --systohc --utc
 
+         Synchronize the system clock across the network
+
+         $ timedatectl set-ntp true
+
          Set up your hostname.
 
          $ echo hostName > /etc/hostname
