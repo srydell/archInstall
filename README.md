@@ -10,391 +10,601 @@ Don't forget to disable fast boot in Windows to ensure that files are saved in W
 
 Make sure that you have an ethernet cable and that EFI mode is set through BIOS.
 
-   ### Send 3 packets to check internet
-         $ ping -c 3 google.com
+### Send 3 packets to check internet
+$ ping -c 3 google.com
 
-   ### Check for efi variables. Should spit out a list
-         $ efivar -l
+### Check for efi variables. Should spit out a list
+$ efivar -l
 
 ## Disk partitioning
 
 I have a Windows install on the same disk. We will create a root partition, a boot partition and a swap partition.
 
-   ### Checking the current disk partitioning
+### Checking the current disk partitioning
 
-         $ lsblk
+$ lsblk
 
-         This should give you a list of partitions. I have a ssd so for me is says:
-         sda
-            sda1
-            sda2
-            sda3
-            sda4
-            sda5
-        These are refered to as /dev/sdaN, where N is 1-5. The first four is Windows partitions, so the fifth will become the first associated with Linux.
+This should give you a list of partitions. I have a ssd so for me is says:
+sda
+sda1
+sda2
+sda3
+sda4
+sda5
+These are refered to as /dev/sdaN, where N is 1-5. The first four is Windows partitions, so the fifth will become the first associated with Linux.
 
-   ### Create disk partitions for Linux.
+### Create disk partitions for Linux.
 
-         $ cgdisk /dev/sda
+$ cgdisk /dev/sda
 
-         You will be presented with a text based program to partition /dev/sda. Select the Partition Type *free space* and press New. Press Enter to choose the default start sector. Write '1024MiB' and choose code 'EF00' for EFI system. Name this partition 'boot'.
-         Make another partition for swap space. The size depends on your amount of RAM. For me, since I have 16 GiB I can safely choose 8GiB of swap space. The code for swap is '8200', and name is 'swap'.
-         Make one last partition with the rest of the sectors (press Enter two times to default to all sectors) and the default code '8300' and call it 'root'.
-         Take note of which partition is stored on which number.
-         You can now press Write and then Quit to exit the application.
+You will be presented with a text based program to partition /dev/sda. Select the Partition Type *free space* and press New. Press Enter to choose the default start sector. Write '1024MiB' and choose code 'EF00' for EFI system. Name this partition 'boot'.
+Make another partition for swap space. The size depends on your amount of RAM. For me, since I have 16 GiB I can safely choose 8GiB of swap space. The code for swap is '8200', and name is 'swap'.
+Make one last partition with the rest of the sectors (press Enter two times to default to all sectors) and the default code '8300' and call it 'root'.
+Take note of which partition is stored on which number.
+You can now press Write and then Quit to exit the application.
 
-   ### Creating the file systems
+### Creating the file systems
 
-         $ mkfs.fat -F32 /dev/sda5
-         $ mkswap /dev/sda6
-         $ swapon /dev/sda6
-         $ mkfs.ext4 /dev/sda7
+```shell
+$ mkfs.fat -F32 /dev/sda5
+$ mkswap /dev/sda6
+$ swapon /dev/sda6
+$ mkfs.ext4 /dev/sda7
+```
 
-         This will create a bootable FAT32 on sda5. Swap on sda6, and ext4 file system on sda7.
+This will create a bootable FAT32 on sda5. Swap on sda6, and ext4 file system on sda7.
 
 ## Mount and install Arch
 
-   ### Mounting partitions
+### Mounting partitions
 
-         $ mount /dev/sda7 /mnt
-         $ mkdir /mnt/boot
-         $ mount /dev/sda5 /mnt/boot
+```shell
+$ mount /dev/sda7 /mnt
+$ mkdir /mnt/boot
+$ mount /dev/sda5 /mnt/boot
+```
 
-   ### Setting up Arch repository mirrorlist
+### Setting up Arch repository mirrorlist
 
-         Find the closest mirror to optimize package installation. First make a backup of the current mirrorlist.
+Find the closest mirror to optimize package installation. First make a backup of the current mirrorlist.
 
-         $ cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
+```shell
+$ cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
+```
 
-         Use *sed* to uncomment all of the mirrors (sed - stream editor).
+Use *sed* to uncomment all of the mirrors (sed - stream editor).
 
-         $ sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.backup
+```shell
+$ sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.backup
+```
 
-         Rank the top 6 mirrors and leave them uncommented. This will take a while.
+Rank the top 6 mirrors and leave them uncommented. This will take a while.
 
-         $ rankmirrors -n 6 /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist
+```shell
+$ rankmirrors -n 6 /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist
+```
 
-   ### Install Arch base and development files
+### Install Arch base and development files
 
-         $ pacstrap -i /mnt base base-devel
+```shell
+$ pacstrap -i /mnt base base-devel
+```
 
-   ### Generate fstab file
+### Generate fstab file
 
-         This will make sure that the mountpoints are remembered when rebooting later.
+This will make sure that the mountpoints are remembered when rebooting later.
 
-         $ genfstab -U -p /mnt >> /mnt/etc/fstab
+```shell
+$ genfstab -U -p /mnt >> /mnt/etc/fstab
+```
 
-         Make sure that every partition is there.
+Make sure that every partition is there.
 
-         $ nano /mnt/etc/fstab
+```shell
+$ nano /mnt/etc/fstab
+```
 
-   ### Change root into your system and set up your locals
+### Change root into your system and set up your locals
 
-         $ arch-chroot /mnt
+```shell
+$ arch-chroot /mnt
+```
 
-         For language create a locale.gen file.
+For language create a locale.gen file.
 
-         $ nano /etc/locale.gen
+```shell
+$ nano /etc/locale.gen
+```
 
-         Uncomment your locale. I uncommented en_US.UTF-8. Generate the locale.
+Uncomment your locale. I uncommented en_US.UTF-8. Generate the locale.
 
-         $ locale-gen
+```shell
+$ locale-gen
+```
 
-         Set your language
+Set your language
 
-         $ echo LANG=en_US.UTF-8 > /etc/locale.conf
-         $ export LANG=en_US.UTF-8
+```shell
+$ echo LANG=en_US.UTF-8 > /etc/locale.conf
+$ export LANG=en_US.UTF-8
+```
 
-         Set a symbolic link to your time zone. Each time zone can be found in /usr/share/zoneinfo/
+Set a symbolic link to your time zone. Each time zone can be found in /usr/share/zoneinfo/
 
-         $ ln -s /usr/share/zoneinfo/your-time-zone /etc/localtime
+```shell
+$ ln -s /usr/share/zoneinfo/your-time-zone /etc/localtime
+```
 
-         Set hardware clock to utc
+Set hardware clock to utc
 
-         $ hwclock --systohc --utc
+```shell
+$ hwclock --systohc --utc
+```
 
-         Synchronize the system clock across the network
+Synchronize the system clock across the network
 
-         $ timedatectl set-ntp true
+```shell
+$ timedatectl set-ntp true
+```
 
-         Set up your hostname.
+Set up your hostname.
 
-         $ echo hostName > /etc/hostname
+```shell
+$ echo hostName > /etc/hostname
+```
 
-         If you have a SSD then you might want to enable TRIM support.
+If you have a SSD then you might want to enable TRIM support.
 
-         $ systemctl enable fstrim.timer
+```shell
+$ systemctl enable fstrim.timer
+```
 
-   ### Setup pacman and user configuration
+### Setup pacman and user configuration
 
-         Open pacman.conf and uncomment support for multilib (if you want to install 32bit programs)
+Open pacman.conf and uncomment support for multilib (if you want to install 32bit programs)
 
-         $ nano /etc/pacman.conf
+```shell
+$ nano /etc/pacman.conf
+```
 
-         Here you uncomment the two lines marked as
-         [multilib]
-         Include = /etc/pacman.d/mirrorlist
+Here you uncomment the two lines marked as
+[multilib]
+Include = /etc/pacman.d/mirrorlist
 
-         Save the file and update your system
+Save the file and update your system
 
-         $ pacman -Sy
+```shell
+$ pacman -Sy
+```
 
-         Setup a root password
+Setup a root password
 
-         $ passwd
+```shell
+$ passwd
+```
 
-         Now add users to the groups wheel,storage,power
+Now add users to the groups wheel,storage,power
 
-         $ useradd -m -g users -G wheel,storage,power -s /bin/bash someUsername
+```shell
+$ useradd -m -g users -G wheel,storage,power -s /bin/bash someUsername
+```
 
-         Set a password for that user
+Set a password for that user
 
-         $ passwd someUsername
+```shell
+$ passwd someUsername
+```
 
-         Setup which users can use the sudo command
+Setup which users can use the sudo command
 
-         $ EDITOR=nano visudo
+```shell
+$ EDITOR=nano visudo
+```
 
-         Uncomment
-         %wheel ALL=(ALL) ALL
+Uncomment
+%wheel ALL=(ALL) ALL
 
-         At the end of the file add
-         Defaults rootpw
+At the end of the file add
+Defaults rootpw
 
-         Install the bootloader. First check that EFI variables are mounted.
+Install the bootloader. First check that EFI variables are mounted.
 
-         $ mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+```shell
+$ mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+```
 
-         If it says that they are already mounted, you're good to go!
+If it says that they are already mounted, you're good to go!
 
-         Install the bootloader
+Install the bootloader
 
-         $ bootctl install
+```shell
+$ bootctl install
+```
 
-         We need to know our root partition. Mine is sda7. You can see all partition by typing "lblk". Create an arch.conf file.
+We need to know our root partition. Mine is sda7. You can see all partition by typing "lblk". Create an arch.conf file.
 
-         $ nano /boot/loader/entries/arch.conf
+```shell
+$ nano /boot/loader/entries/arch.conf
+```
 
-         Add these lines:
+Add these lines:
 
-         title Arch Linux
-         linux /vmlinuz-linux
-         initrd /initramfs-linux.img
+```shell
+title Arch Linux
+linux /vmlinuz-linux
+initrd /initramfs-linux.img
+```
 
-         Save and close this file. We need to add the root partition PARTUUID to this file. This is easiest done by a shell command.
+Save and close this file. We need to add the root partition PARTUUID to this file. This is easiest done by a shell command.
 
-         $ echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/sda7) rw" >> /boot/loader/entries/arch.conf
+```shell
+$ echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/sda7) rw" >> /boot/loader/entries/arch.conf
+```
 
-         Where you change /dev/sda7 to your root partition.
+Where you change /dev/sda7 to your root partition.
 
-             If you have an intel processor you need to install intel-ucode.
+If you have an intel processor you need to install intel-ucode.
 
-             $ pacman -S intel-ucode
+```shell
+$ pacman -S intel-ucode
+```
 
-             Then you need to add another line to the arch.conf
+Then you need to add another line to the arch.conf
 
-             $ sudo nano /boot/loader/entries/arch.conf
+```shell
+$ sudo nano /boot/loader/entries/arch.conf
+```
 
-             Add the line "initrd /intel-ucode.img" before "initrd /initramfs-linux.img"
+Add the line "initrd /intel-ucode.img" before "initrd /initramfs-linux.img"
 
-         Now we need to enable dhcpcd at system start.
+Now we need to enable dhcpcd at system start.
 
-         $ ip link
+```shell
+$ ip link
+```
 
-         Check for your address. It looks like "enpXXsY".
+Check for your address. It looks like "enpXXsY".
 
-         $ sudo systemctl enable dhcpcd@enpXXsY.service
+```shell
+$ sudo systemctl enable dhcpcd@enpXXsY.service
+```
 
-         Download networkmanager and enable it.
+Download networkmanager and enable it.
 
-         $ sudo pacman -S networkmanager
-         $ sudo systemctl enable NetworkManager.service
+```shell
+$ sudo pacman -S networkmanager
+$ sudo systemctl enable NetworkManager.service
+```
 
-         Some programs need to have headers installed.
+Some programs need to have headers installed.
 
-         $ sudo pacman -S linux-headers
+```shell
+$ sudo pacman -S linux-headers
+```
 
-         I like the open source drivers [Nouveau](https://wiki.archlinux.org/index.php/nouveau) as a driver for Nvidia cards.
+I like the open source drivers [Nouveau](https://wiki.archlinux.org/index.php/nouveau) as a driver for Nvidia cards.
 
-         $ sudo pacman -S xf86-video-nouveau lib32-mesa
+```shell
+$ sudo pacman -S xf86-video-nouveau lib32-mesa
+```
 
-         You should now be able to reboot your system. Exit to arch root, unmount all drives and reboot the system.
+You should now be able to reboot your system. Exit to arch root, unmount all drives and reboot the system.
 
-         $ exit
-         $ umount -R /mnt
-         $ reboot
+```shell
+$ exit
+$ umount -R /mnt
+$ reboot
+```
 
-         You should now be able to boot in and see a login screen.
+You should now be able to boot in and see a login screen.
 
-         Now install xorg as a background for i3.
+Now install xorg as a background for i3.
 
-         $ sudo pacman -S xorg-server xorg-apps xorg-xinit xorg-twm xorg-xclock xterm
+```shell
+$ sudo pacman -S xorg-server xorg-apps xorg-xinit xorg-twm xorg-xclock xterm
+```
 
-         Make sure that it works.
+Make sure that it works.
 
-         $ startx
+```shell
+$ startx
+```
 
-         It should run three terminals and a clock. Your mouse should now work aswell.
 
-   ### Optimize your system
+It should run three terminals and a clock. Your mouse should now work aswell.
 
-         Install ccache to make compiling a lot faster. We will also set up the system to utilize all the cores. First, find out how many cores are available (this is the number of threads you have if your cpu supports hyperthreading).
+### Optimize your system
 
-         $ lscpu
+Install ccache to make compiling a lot faster. We will also set up the system to utilize all the cores. First, find out how many cores are available (this is the number of threads you have if your cpu supports hyperthreading).
 
-         This command should show you a list of information about your cpu. Find the line called "CPU(s): XX". For me XX=12 since I have a AMD Ryzen 5 1600x. Install ccache.
+```shell
+$ lscpu
+```
 
-         $ sudo pacman -S ccache
 
-         Enable ccache and set our flags in makepkg.conf
+This command should show you a list of information about your cpu. Find the line called "CPU(s): XX". For me XX=12 since I have a AMD Ryzen 5 1600x. Install ccache.
 
-         $ sudo nano /etc/makepkg.conf
+```shell
+$ sudo pacman -S ccache
+```
 
-         Find the line with "BUILDENV='... !ccache ...'. Remove ! in front of ccache to enable it. Find the line with "MAKEFLAGS=" and change it into
-         MAKEFLAGS="-j13 -l12"
-         Where -j(XX+1) -lXX, where XX is the number you got from the "lscpu" command earlier.
 
-         Utilize the optimization outside of the package managers.
+Enable ccache and set our flags in makepkg.conf
 
-         $ nano ~/.bashrc
+```shell
+$ sudo nano /etc/makepkg.conf
+```
 
-         Add these lines to the end of the file
-         export PATH="/usr/lib/ccache/bin/:$PATH"
-         export MAKEFLAGS="-j13 -l12"
-         Where you of course change -j and -l to your values.
 
-         Now we can install our terminal emulator. I prefer [urxvt](https://wiki.archlinux.org/index.php/Rxvt-unicode). urxvt-perls are some preferred librarier (url-select, keyboard-select).
+Find the line with "BUILDENV='... !ccache ...'. Remove ! in front of ccache to enable it. Find the line with "MAKEFLAGS=" and change it into
+MAKEFLAGS="-j13 -l12"
+Where -j(XX+1) -lXX, where XX is the number you got from the "lscpu" command earlier.
 
-         $ pacman -S rxvt-unicode urxvt-perls
+Utilize the optimization outside of the package managers.
 
-	 Download zsh
+```shell
+$ nano ~/.bashrc
+```
 
-	 $ pacman -S zsh zsh-completions
 
-	 Finally ssh for remote access
-	 
-	 $ pacman -S openssh
+Add these lines to the end of the file
+export PATH="/usr/lib/ccache/bin/:$PATH"
+export MAKEFLAGS="-j13 -l12"
+Where you of course change -j and -l to your values.
+
+Now we can install our terminal emulator. I prefer [urxvt](https://wiki.archlinux.org/index.php/Rxvt-unicode). urxvt-perls are some preferred librarier (url-select, keyboard-select).
+
+```shell
+$ pacman -S rxvt-unicode urxvt-perls
+```
+
+
+Download zsh
+
+```shell
+$ pacman -S zsh zsh-completions
+```
+
+
+Finally ssh for remote access
+
+```shell
+$ pacman -S openssh
+```
+
 
 ## Install apacman for AUR repositories
 
-   ### Install git to be able to download apacman, and jshon and wget to use it
-         $ pacman -S git jshon wget
+```shell
+### Install git to be able to download apacman, and jshon and wget to use it
+$ pacman -S git jshon wget
+```
 
-   ### Download apacman, install apacman
-         $ git clone https://github.com/oshazard/apacman.git
-         $ cd ./apacman
-         $ ./apacman -S apacman
 
-   ### Delete the apacman directory as it is installed
-         $ cd ..
-         $ sudo rm -R apacman
+### Download apacman, install apacman
+
+```shell
+$ git clone https://github.com/oshazard/apacman.git
+$ cd ./apacman
+$ ./apacman -S apacman
+```
+
+### Delete the apacman directory as it is installed
+
+```shell
+$ cd ..
+$ sudo rm -R apacman
+```
 
 ## Install i3-gaps as a window manager
 
-   ### First install i3 to get the dependencies
-         $ pacman -S i3
+### First install i3 to get the dependencies
 
-   ### Use apacman to download i3-gaps and remove i3wm when asked
-         $ apacman -S i3-gaps
+```shell
+$ pacman -S i3
+```
 
-   ### Perl scripts to interact with i3
-         $ pacman -S perl-anyevent-i3 perl-json-xs
 
-   ### Set i3 to start on startx command
-         $ echo "exec i3" > ~/.xinitrc
+### Use apacman to download i3-gaps and remove i3wm when asked
+
+```shell
+$ apacman -S i3-gaps
+```
+
+### Perl scripts to interact with i3
+```shell
+$ pacman -S perl-anyevent-i3 perl-json-xs
+```
+
+
+### Set i3 to start on startx command
+```shell
+$ echo "exec i3" > ~/.xinitrc
+```
+
 
 ## Make the system more user friendly
 
-   ### X11 scripting tool
-         $ pacman -S xdotool
+### X11 scripting tool
+```shell
+$ pacman -S xdotool
+```
 
-   ### Resize font on the fly
-         $ apacman -S urxvt-resize-font-git
 
-   ### Font
-         $ apacman -S ttf-iosevka ttf-croscore
+### Resize font on the fly
+```shell
+$ apacman -S urxvt-resize-font-git
+```
 
-   ### Fade out cursor
-         $ apacman -S unclutter-xfixes-git
 
-   ### Project indexer
-         $ pacman -S ctags
+### Font
+```shell
+$ apacman -S ttf-iosevka ttf-croscore
+```
 
-   ### Terminal multiplexor
-         $ pacman -S tmux
 
-   ### Sound control
-         $ pacman -S pulseaudio
+### Fade out cursor
+```shell
+$ apacman -S unclutter-xfixes-git
+```
 
-   ### Configure multiple monitor with arandr. It creates xrandr configuration files from a GUI.
-         Save the config file and add it to your i3 config file as an "exec". This way the configuration will be used each time you log in to your system.
-         $ pacman -S arandr
 
-   ### Application launcher
-         Start this application with "rofi -show run"
-         $ apacman -S rofi
+### Project indexer
+```shell
+$ pacman -S ctags
+```
 
-   ### Watching files for changes and running commands on events
-         $ apacman -S entr
 
-   ### For setting background
-         $ pacman -S feh
+### Terminal multiplexor
+```shell
+$ pacman -S tmux
+```
 
-   ### Adjusts the color temperature of your screen
-         $ pacman -S redshift
 
-   ### PDF-reader
-         $ pacman -S mupdf
+### Sound control
+```shell
+$ pacman -S pulseaudio
+```
 
-   ### Browser, (gst for playing youtube videos)
-         $ pacman -S qutebrowser
-         $ pacman -S gst-plugins-{base,good,bad,ugly} gst-libav
 
-   ### Password manager
-         $ pacman -S pass gnupg
+### Configure multiple monitor with arandr. It creates xrandr configuration files from a GUI.
+Save the config file and add it to your i3 config file as an "exec". This way the configuration will be used each time you log in to your system.
+```shell
+$ pacman -S arandr
+```
 
-   ### File manager
-         $ pacman -S ranger
 
-   ### Statur bar
-         $ apacman -S polybar
+### Application launcher
+Start this application with "rofi -show run"
+```shell
+$ apacman -S rofi
+```
 
-   ### Editor
-         $ pacman -S vim
 
-   ### For tk windows in plotting programs such as matplotlib from python
-         $ pacman -S tk
+### Watching files for changes and running commands on events
+```shell
+$ apacman -S entr
+```
 
-   ### For youcompleteme's autocompletion windows
-         $ apacman -S ncurses5-compat-libs
 
-   ### For latex
-         $ pacman -S texlive-most texlive-lang
+### For setting background
+```shell
+$ pacman -S feh
+```
 
-   ### For latex compilation
-         $ apacman -S rubber
 
-   ### Taskwarrior for task management
-         $ pacman -S task
+### Adjusts the color temperature of your screen
+```shell
+$ pacman -S redshift
+```
 
-   ### Maim for screenshots
-         $ pacman -S maim
 
-   ### Changing document format from one to another
-         $ pacman -S pandoc
+### PDF-reader
+```shell
+$ pacman -S mupdf
+```
 
-   ### Node.js and npm for javascript development
-         $ pacman -S npm
 
-   ### tern for javascript autocompletion
-         $ npm install -g tern
+### Browser, (gst for playing youtube videos)
+```shell
+$ pacman -S qutebrowser
+$ pacman -S gst-plugins-{base,good,bad,ugly} gst-libav
+```
 
-   ### For formatting of html, css and javascript
-         $ pip3 install jsbeautifier
 
-   ### tmux project manager
-         $ pip install tmuxp
+### Password manager
+```shell
+$ pacman -S pass gnupg
+```
 
-   ### for checking shell scripts
-         $ pacman -S shellcheck
+
+### File manager
+```shell
+$ pacman -S ranger
+```
+
+
+### Statur bar
+```shell
+$ apacman -S polybar
+```
+
+
+### Editor
+```shell
+$ pacman -S vim
+```
+
+
+### For tk windows in plotting programs such as matplotlib from python
+```shell
+$ pacman -S tk
+```
+
+
+### For youcompleteme's autocompletion windows
+```shell
+$ apacman -S ncurses5-compat-libs
+```
+
+
+### For latex
+```shell
+$ pacman -S texlive-most texlive-lang
+```
+
+
+### For latex compilation
+```shell
+$ apacman -S rubber
+```
+
+
+### Taskwarrior for task management
+```shell
+$ pacman -S task
+```
+
+
+### Maim for screenshots
+```shell
+$ pacman -S maim
+```
+
+
+### Changing document format from one to another
+```shell
+$ pacman -S pandoc
+```
+
+
+### Node.js and npm for javascript development
+```shell
+$ pacman -S npm
+```
+
+
+### tern for javascript autocompletion
+```shell
+$ npm install -g tern
+```
+
+
+### For formatting of html, css and javascript
+```shell
+$ pip3 install jsbeautifier
+```
+
+
+### tmux project manager
+```shell
+$ pip install tmuxp
+```
+
+
+### for checking shell scripts
+```shell
+$ pacman -S shellcheck
+```
+
 
