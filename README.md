@@ -6,21 +6,21 @@ This guide assumes you have a live disk of Arch linux on a usb stick. Otherwise 
 
 Don't forget to disable fast boot in Windows to ensure that files are saved in Windows when switching OS.
 
-* ## Verifying internet and EFI is set correctly
+## Verifying internet and EFI is set correctly
 
 Make sure that you have an ethernet cable and that EFI mode is set through BIOS.
 
-   * ### Send 3 packets to check internet
+   ### Send 3 packets to check internet
          $ ping -c 3 google.com
 
-   * ### Check for efi variables. Should spit out a list
+   ### Check for efi variables. Should spit out a list
          $ efivar -l
 
-* ## Disk partitioning
+## Disk partitioning
 
 I have a Windows install on the same disk. We will create a root partition, a boot partition and a swap partition.
 
-   * ### Checking the current disk partitioning
+   ### Checking the current disk partitioning
 
          $ lsblk
 
@@ -33,7 +33,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
             sda5
         These are refered to as /dev/sdaN, where N is 1-5. The first four is Windows partitions, so the fifth will become the first associated with Linux.
 
-   * ### Create disk partitions for Linux.
+   ### Create disk partitions for Linux.
 
          $ cgdisk /dev/sda
 
@@ -43,7 +43,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          Take note of which partition is stored on which number.
          You can now press Write and then Quit to exit the application.
 
-   * ### Creating the file systems
+   ### Creating the file systems
 
          $ mkfs.fat -F32 /dev/sda5
          $ mkswap /dev/sda6
@@ -52,15 +52,15 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
          This will create a bootable FAT32 on sda5. Swap on sda6, and ext4 file system on sda7.
 
-* ## Mount and install Arch
+## Mount and install Arch
 
-   * ### Mounting partitions
+   ### Mounting partitions
 
          $ mount /dev/sda7 /mnt
          $ mkdir /mnt/boot
          $ mount /dev/sda5 /mnt/boot
 
-   * ### Setting up Arch repository mirrorlist
+   ### Setting up Arch repository mirrorlist
 
          Find the closest mirror to optimize package installation. First make a backup of the current mirrorlist.
 
@@ -74,11 +74,11 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
          $ rankmirrors -n 6 /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist
 
-   * ### Install Arch base and development files
+   ### Install Arch base and development files
 
          $ pacstrap -i /mnt base base-devel
 
-   * ### Generate fstab file
+   ### Generate fstab file
 
          This will make sure that the mountpoints are remembered when rebooting later.
 
@@ -88,7 +88,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
          $ nano /mnt/etc/fstab
 
-   * ### Change root into your system and set up your locals
+   ### Change root into your system and set up your locals
 
          $ arch-chroot /mnt
 
@@ -107,7 +107,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
          Set a symbolic link to your time zone. Each time zone can be found in /usr/share/zoneinfo/
 
-         $ ln -s /usr/share/zoneinfo/your-time-zone > /etc/localtime
+         $ ln -s /usr/share/zoneinfo/your-time-zone /etc/localtime
 
          Set hardware clock to utc
 
@@ -125,7 +125,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
          $ systemctl enable fstrim.timer
 
-   * ### Setup pacman and user configuration
+   ### Setup pacman and user configuration
 
          Open pacman.conf and uncomment support for multilib (if you want to install 32bit programs)
 
@@ -236,7 +236,7 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
          It should run three terminals and a clock. Your mouse should now work aswell.
 
-   * ### Optimize your system
+   ### Optimize your system
 
          Install ccache to make compiling a lot faster. We will also set up the system to utilize all the cores. First, find out how many cores are available (this is the number of threads you have if your cpu supports hyperthreading).
 
@@ -266,7 +266,6 @@ I have a Windows install on the same disk. We will create a root partition, a bo
          Now we can install our terminal emulator. I prefer [urxvt](https://wiki.archlinux.org/index.php/Rxvt-unicode). urxvt-perls are some preferred librarier (url-select, keyboard-select).
 
          $ pacman -S rxvt-unicode urxvt-perls
-         $ apacman -S urxvt-resize-font-git
 
 	 Download zsh
 
@@ -276,123 +275,126 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 	 
 	 $ pacman -S openssh
 
-* ## Install apacman for AUR repositories
+## Install apacman for AUR repositories
 
-   * ### Install git to be able to download apacman, and jshon and wget to use it
+   ### Install git to be able to download apacman, and jshon and wget to use it
          $ pacman -S git jshon wget
 
-   * ### Download apacman, install apacman
+   ### Download apacman, install apacman
          $ git clone https://github.com/oshazard/apacman.git
          $ cd ./apacman
          $ ./apacman -S apacman
 
-   * ### Delete the apacman directory as it is installed
+   ### Delete the apacman directory as it is installed
          $ cd ..
          $ sudo rm -R apacman
 
-* ## Install i3-gaps as a window manager
+## Install i3-gaps as a window manager
 
-   * ### First install i3 to get the dependencies
+   ### First install i3 to get the dependencies
          $ pacman -S i3
 
-   * ### Use apacman to download i3-gaps and remove i3wm when asked
+   ### Use apacman to download i3-gaps and remove i3wm when asked
          $ apacman -S i3-gaps
 
-   * ### Perl scripts to interact with i3
+   ### Perl scripts to interact with i3
          $ pacman -S perl-anyevent-i3 perl-json-xs
 
-   * ### Set i3 to start on startx command
+   ### Set i3 to start on startx command
          $ echo "exec i3" > ~/.xinitrc
 
-* ## Make the system more user friendly
+## Make the system more user friendly
 
-   * ### X11 scripting tool
+   ### X11 scripting tool
          $ pacman -S xdotool
 
-   * ### Font
+   ### Resize font on the fly
+         $ apacman -S urxvt-resize-font-git
+
+   ### Font
          $ apacman -S ttf-iosevka ttf-croscore
 
-   * ### Fade out cursor
+   ### Fade out cursor
          $ apacman -S unclutter-xfixes-git
 
-   * ### Project indexer
+   ### Project indexer
          $ pacman -S ctags
 
-   * ### Terminal multiplexor
+   ### Terminal multiplexor
          $ pacman -S tmux
 
-   * ### Sound control
+   ### Sound control
          $ pacman -S pulseaudio
 
-   * ### Configure multiple monitor with arandr. It creates xrandr configuration files from a GUI.
+   ### Configure multiple monitor with arandr. It creates xrandr configuration files from a GUI.
          Save the config file and add it to your i3 config file as an "exec". This way the configuration will be used each time you log in to your system.
          $ pacman -S arandr
 
-   * ### Application launcher
+   ### Application launcher
          Start this application with "rofi -show run"
          $ apacman -S rofi
 
-   * ### Watching files for changes and running commands on events
+   ### Watching files for changes and running commands on events
          $ apacman -S entr
 
-   * ### For setting background
+   ### For setting background
          $ pacman -S feh
 
-   * ### Adjusts the color temperature of your screen
+   ### Adjusts the color temperature of your screen
          $ pacman -S redshift
 
-   * ### PDF-reader
+   ### PDF-reader
          $ pacman -S mupdf
 
-   * ### Browser, (gst for playing youtube videos)
+   ### Browser, (gst for playing youtube videos)
          $ pacman -S qutebrowser
          $ pacman -S gst-plugins-{base,good,bad,ugly} gst-libav
 
-   * ### Password manager
+   ### Password manager
          $ pacman -S pass gnupg
 
-   * ### File manager
+   ### File manager
          $ pacman -S ranger
 
-   * ### Statur bar
+   ### Statur bar
          $ apacman -S polybar
 
-   * ### Editor
+   ### Editor
          $ pacman -S vim
 
-   * ### For tk windows in plotting programs such as matplotlib from python
+   ### For tk windows in plotting programs such as matplotlib from python
          $ pacman -S tk
 
-   * ### For youcompleteme's autocompletion windows
+   ### For youcompleteme's autocompletion windows
          $ apacman -S ncurses5-compat-libs
 
-   * ### For latex
+   ### For latex
          $ pacman -S texlive-most texlive-lang
 
-   * ### For latex compilation
+   ### For latex compilation
          $ apacman -S rubber
 
-   * ### Taskwarrior for task management
+   ### Taskwarrior for task management
          $ pacman -S task
 
-   * ### Maim for screenshots
+   ### Maim for screenshots
          $ pacman -S maim
 
-   * ### Changing document format from one to another
+   ### Changing document format from one to another
          $ pacman -S pandoc
 
-   * ### Node.js and npm for javascript development
+   ### Node.js and npm for javascript development
          $ pacman -S npm
 
-   * ### tern for javascript autocompletion
+   ### tern for javascript autocompletion
          $ npm install -g tern
 
-   * ### For formatting of html, css and javascript
+   ### For formatting of html, css and javascript
          $ pip3 install jsbeautifier
 
-   * ### tmux project manager
+   ### tmux project manager
          $ pip install tmuxp
 
-   * ### for checking shell scripts
+   ### for checking shell scripts
          $ pacman -S shellcheck
 
