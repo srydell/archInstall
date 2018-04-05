@@ -599,10 +599,14 @@ $ pacman -S npm
 $ npm install -g tern
 ```
 
+### Install package manager for python
+```shell
+$ pacman -S python-pip
+```
 
 ### For formatting of html, css and javascript
 ```shell
-$ pip3 install jsbeautifier
+$ pip install jsbeautifier
 ```
 
 
