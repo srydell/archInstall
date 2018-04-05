@@ -11,10 +11,16 @@ Don't forget to disable fast boot in Windows to ensure that files are saved in W
 Make sure that you have an ethernet cable and that EFI mode is set through BIOS.
 
 ### Send 3 packets to check internet
+```shell
 $ ping -c 3 google.com
+```
+
 
 ### Check for efi variables. Should spit out a list
+```shell
 $ efivar -l
+```
+
 
 ## Disk partitioning
 
@@ -22,7 +28,9 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 
 ### Checking the current disk partitioning
 
+```shell
 $ lsblk
+```
 
 This should give you a list of partitions. I have a ssd so for me is says:
 sda
@@ -35,7 +43,9 @@ These are refered to as /dev/sdaN, where N is 1-5. The first four is Windows par
 
 ### Create disk partitions for Linux.
 
+```shell
 $ cgdisk /dev/sda
+```
 
 You will be presented with a text based program to partition /dev/sda. Select the Partition Type *free space* and press New. Press Enter to choose the default start sector. Write '1024MiB' and choose code 'EF00' for EFI system. Name this partition 'boot'.
 Make another partition for swap space. The size depends on your amount of RAM. For me, since I have 16 GiB I can safely choose 8GiB of swap space. The code for swap is '8200', and name is 'swap'.
