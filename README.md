@@ -391,7 +391,7 @@ $ pacman -S git jshon wget
 ```
 
 
-### Download yay, install yay
+### Download and install yay
 
 ```shell
 $ git clone https://aur.archlinux.org/yay.git
