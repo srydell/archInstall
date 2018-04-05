@@ -383,27 +383,28 @@ $ pacman -S openssh
 ```
 
 
-## Install apacman for AUR repositories
+## Install yay for AUR repositories
 
+### Install git to be able to download yay, and jshon and wget to use it
 ```shell
-### Install git to be able to download apacman, and jshon and wget to use it
 $ pacman -S git jshon wget
 ```
 
 
-### Download apacman, install apacman
+### Download yay, install yay
 
 ```shell
-$ git clone https://github.com/oshazard/apacman.git
-$ cd ./apacman
-$ ./apacman -S apacman
+$ git clone https://aur.archlinux.org/yay.git
+$ cd ./yay
+$ makepkg -s
+$ sudo pacman -U *xz
 ```
 
-### Delete the apacman directory as it is installed
+### Delete the yay directory as it is installed
 
 ```shell
 $ cd ..
-$ sudo rm -R apacman
+$ rm -rf yay
 ```
 
 ## Install i3-gaps as a window manager
@@ -414,11 +415,10 @@ $ sudo rm -R apacman
 $ pacman -S i3
 ```
 
-
-### Use apacman to download i3-gaps and remove i3wm when asked
+### Use yay to download i3-gaps and remove i3wm when asked
 
 ```shell
-$ apacman -S i3-gaps
+$ yay -S i3-gaps
 ```
 
 ### Perl scripts to interact with i3
@@ -443,19 +443,19 @@ $ pacman -S xdotool
 
 ### Resize font on the fly
 ```shell
-$ apacman -S urxvt-resize-font-git
+$ yay -S urxvt-resize-font-git
 ```
 
 
 ### Font
 ```shell
-$ apacman -S ttf-iosevka ttf-croscore
+$ yay -S ttf-iosevka ttf-croscore
 ```
 
 
 ### Fade out cursor
 ```shell
-$ apacman -S unclutter-xfixes-git
+$ yay -S unclutter-xfixes-git
 ```
 
 
@@ -487,13 +487,13 @@ $ pacman -S arandr
 ### Application launcher
 Start this application with "rofi -show run"
 ```shell
-$ apacman -S rofi
+$ yay -S rofi
 ```
 
 
 ### Watching files for changes and running commands on events
 ```shell
-$ apacman -S entr
+$ yay -S entr
 ```
 
 
@@ -536,7 +536,7 @@ $ pacman -S ranger
 
 ### Statur bar
 ```shell
-$ apacman -S polybar
+$ yay -S polybar
 ```
 
 
@@ -554,7 +554,7 @@ $ pacman -S tk
 
 ### For youcompleteme's autocompletion windows
 ```shell
-$ apacman -S ncurses5-compat-libs
+$ yay -S ncurses5-compat-libs
 ```
 
 
@@ -566,7 +566,7 @@ $ pacman -S texlive-most texlive-lang
 
 ### For latex compilation
 ```shell
-$ apacman -S rubber
+$ yay -S rubber
 ```
 
 
