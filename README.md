@@ -440,6 +440,10 @@ $ echo "exec i3" > ~/.xinitrc
 $ pacman -S xdotool
 ```
 
+### Screen compositor
+```shell
+$ pacman -S compton
+```
 
 ### Resize font on the fly
 ```shell
