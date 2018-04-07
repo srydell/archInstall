@@ -111,7 +111,7 @@ $ genfstab -U -p /mnt >> /mnt/etc/fstab
 Make sure that every partition is there.
 
 ```shell
-$ nano /mnt/etc/fstab
+$ vim /mnt/etc/fstab
 ```
 
 ### Change root into your system and set up your locals
@@ -123,7 +123,7 @@ $ arch-chroot /mnt
 For language create a locale.gen file.
 
 ```shell
-$ nano /etc/locale.gen
+$ vim /etc/locale.gen
 ```
 
 Uncomment your locale. I uncommented en_US.UTF-8. Generate the locale.
@@ -174,7 +174,7 @@ $ systemctl enable fstrim.timer
 Open pacman.conf and uncomment support for multilib (if you want to install 32bit programs)
 
 ```shell
-$ nano /etc/pacman.conf
+$ vim /etc/pacman.conf
 ```
 
 Here you uncomment the two lines marked as
@@ -208,7 +208,7 @@ $ passwd someUsername
 Setup which users can use the sudo command
 
 ```shell
-$ EDITOR=nano visudo
+$ EDITOR=vim visudo
 ```
 
 Uncomment
@@ -234,7 +234,7 @@ $ bootctl install
 We need to know our root partition. Mine is sda7. You can see all partition by typing "lblk". Create an arch.conf file.
 
 ```shell
-$ nano /boot/loader/entries/arch.conf
+$ vim /boot/loader/entries/arch.conf
 ```
 
 Add these lines:
@@ -262,7 +262,7 @@ $ pacman -S intel-ucode
 Then you need to add another line to the arch.conf
 
 ```shell
-$ sudo nano /boot/loader/entries/arch.conf
+$ sudo vim /boot/loader/entries/arch.conf
 ```
 
 Add the line "initrd /intel-ucode.img" before "initrd /initramfs-linux.img"
@@ -342,7 +342,7 @@ $ sudo pacman -S ccache
 Enable ccache and set our flags in makepkg.conf
 
 ```shell
-$ sudo nano /etc/makepkg.conf
+$ sudo vim /etc/makepkg.conf
 ```
 
 
@@ -353,7 +353,7 @@ Where -j(XX+1) -lXX, where XX is the number you got from the "lscpu" command ear
 Utilize the optimization outside of the package managers.
 
 ```shell
-$ nano ~/.bashrc
+$ vim ~/.bashrc
 ```
 
 
