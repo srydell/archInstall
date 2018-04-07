@@ -97,7 +97,7 @@ $ rankmirrors -n 6 /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist
 ### Install Arch base and development files
 
 ```shell
-$ pacstrap -i /mnt base base-devel
+$ pacstrap -i /mnt base base-devel vim bash-completion
 ```
 
 ### Generate fstab file
@@ -538,13 +538,6 @@ $ pacman -S ranger
 ```shell
 $ yay -S polybar
 ```
-
-
-### Editor
-```shell
-$ pacman -S vim
-```
-
 
 ### For tk windows in plotting programs such as matplotlib from python
 ```shell
