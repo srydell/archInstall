@@ -298,6 +298,54 @@ I like the open source drivers [Nouveau](https://wiki.archlinux.org/index.php/no
 $ sudo pacman -S xf86-video-nouveau lib32-mesa
 ```
 
+#### Nvidia proprietary drivers
+
+If you want the proprietary drivers you should install the following
+
+```shell
+$ sudo pacman -S nvidia libglvnd nvidia-utils opencl-nvidia nvidia-settings
+```
+
+Now set the drm kernel modules for Nvidia
+
+```shell
+$ vim /etc/mkinitcpio.conf
+```
+
+Add the Nvidia modules to the MODULES entry as
+
+```text
+MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
+```
+
+Now ensure that these are loaded on boot by adding nvidia-drm.modeset=1 to the root entry in /boot/loader/entries/arch.conf. This line should look something like this when you're done;
+
+```text
+options root=PARTUUID=... rw nvidia-drm.modeset=1
+```
+
+A big confusion about the Nvidia drivers is that we need to run mkinitcpio to recreate the initial ramdisk environment every time the kernel is upgraded. This is something I forget every time so we will add a pacman hook to do this automatically.
+
+```shell
+$ vim /etc/pacman.d/hooks/nvidia.hook
+```
+
+Add this hook;
+
+```ini
+[Trigger]
+Operation=Install
+Operation=Upgrade
+Operation=Remove
+Type=Package
+Target=nvidia
+
+[Action]
+Depends=mkinitcpio
+When=PostTransaction
+Exec=/usr/bin/mkinitcpio -P
+```
+
 You should now be able to reboot your system. Exit to arch root, unmount all drives and reboot the system.
 
 ```shell
@@ -308,10 +356,16 @@ $ reboot
 
 You should now be able to boot in and see a login screen.
 
-Now install xorg as a background for i3.
+If you are on a laptop you might want touchpad support
 
 ```shell
-$ sudo pacman -S xorg-server xorg-apps xorg-xinit xorg-twm xorg-xclock xterm
+$ sudo pacman -S xf86-input-synaptics
+```
+
+Now install xorg as a background for i3 and mesa for 3d support.
+
+```shell
+$ sudo pacman -S xorg-server xorg-apps xorg-xinit xorg-twm xorg-xclock xterm mesa
 ```
 
 Make sure that it works.
