@@ -649,6 +649,12 @@ $ npm install -g tern
 $ pacman -S python-pip
 ```
 
+### For downloading youtube videos and also some fancy mpv i3 scripting
+```shell
+$ pip install youtube-dl
+```
+
+
 ### For formatting of html, css and javascript
 ```shell
 $ pip install jsbeautifier
