@@ -142,7 +142,7 @@ $ export LANG=en_US.UTF-8
 Set a symbolic link to your time zone. Each time zone can be found in /usr/share/zoneinfo/
 
 ```shell
-$ ln -s /usr/share/zoneinfo/your-time-zone /etc/localtime
+$ ln -s /usr/share/zoneinfo/your-time-zone > /etc/localtime
 ```
 
 Set hardware clock to utc
