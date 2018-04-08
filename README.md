@@ -303,7 +303,7 @@ $ sudo pacman -S xf86-video-nouveau lib32-mesa
 If you want the proprietary drivers you should install the following
 
 ```shell
-$ sudo pacman -S nvidia libglvnd nvidia-utils opencl-nvidia nvidia-settings
+$ sudo pacman -S nvidia libglvnd nvidia-utils opencl-nvidia nvidia-settings lib32-libglvnd lib32-nvidia-utils lib32-opencl-nvidia
 ```
 
 Now set the drm kernel modules for Nvidia
@@ -466,13 +466,7 @@ $ rm -rf yay
 ### First install i3 to get the dependencies
 
 ```shell
-$ pacman -S i3
-```
-
-### Use yay to download i3-gaps and remove i3wm when asked
-
-```shell
-$ yay -S i3-gaps
+$ pacman -S i3-gaps
 ```
 
 ### Perl scripts to interact with i3
