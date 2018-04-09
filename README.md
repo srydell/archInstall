@@ -523,9 +523,9 @@ $ pacman -S tmux
 ```
 
 
-### Sound control
+### Sound control (jack for sink detection and pavucontrol for GUI overview)
 ```shell
-$ pacman -S pulseaudio
+$ pacman -S pulseaudio pulseaudio-jack pavucontrol
 ```
 
 
