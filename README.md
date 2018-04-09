@@ -672,4 +672,8 @@ $ pip install tmuxp
 $ pacman -S shellcheck
 ```
 
+### Drawing and designing
+```shell
+$ pacman -S blender inkscape gimp
+```
 
