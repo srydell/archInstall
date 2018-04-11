@@ -591,6 +591,11 @@ $ pacman -S ranger
 $ yay -S polybar
 ```
 
+### Polybar need wireless-tools to use eth/wlan modules
+```shell
+$ pacman -S wireless_tools
+```
+
 ### For tk windows in plotting programs such as matplotlib from python
 ```shell
 $ pacman -S tk
