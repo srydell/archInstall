@@ -461,6 +461,31 @@ $ cd ..
 $ rm -rf yay
 ```
 
+Now that yay is set up we can download scripts to synchronize our local time with servers keeping time for our timezone (set in /usr/share/zoneinfo/your-time-zone previously). ntpd works without configuration so you only have to install it.
+
+```shell
+$ sudo pacman -S ntp
+```
+
+Synch with the servers.
+
+```shell
+$ sudo ntpd -qg
+$ sudo hwclock --systohc
+```
+
+A nice way of keeping track of this is by enabling it to run every time a network interface is available. For NetworkManager, the hooks are called dispatcher scripts, so lets enable them to launch at boot (--now starts the service now aswell).
+
+```shell
+$ systemctl enable --now NetworkManager-dispatcher.service
+```
+
+Now the ntpd script can be downloaded (it is automatically configured. Note that the dispatcher scripts must be owned by root).
+
+```shell
+$ yay -S networkmanager-dispatcher-ntpd
+```
+
 ## Install i3-gaps as a window manager
 
 ### First install i3 to get the dependencies
