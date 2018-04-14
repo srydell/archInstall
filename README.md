@@ -697,9 +697,10 @@ $ pip install tmuxp
 ```
 
 
-### for checking shell scripts
+### For lintint code
 ```shell
 $ pacman -S shellcheck
+$ pip install vim-vint
 ```
 
 ### Drawing and designing
