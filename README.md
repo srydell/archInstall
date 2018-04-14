@@ -231,7 +231,7 @@ Install the bootloader
 $ bootctl install
 ```
 
-We need to know our root partition. Mine is sda7. You can see all partition by typing "lblk". Create an arch.conf file.
+Create an arch.conf file.
 
 ```shell
 $ vim /boot/loader/entries/arch.conf
@@ -245,19 +245,21 @@ linux /vmlinuz-linux
 initrd /initramfs-linux.img
 ```
 
-Save and close this file. We need to add the root partition PARTUUID to this file. This is easiest done by a shell command.
+Save and close the file. We need to know our root partition. Mine is sda7. You can see all partition by typing "lblk". Add the root partition PARTUUID to the arch.conf file. This is easiest done by a shell command.
 
 ```shell
 $ echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/sda7) rw" >> /boot/loader/entries/arch.conf
 ```
 
-Where you change /dev/sda7 to your root partition.
+---
 
 If you have an intel processor you need to install intel-ucode.
 
 ```shell
 $ pacman -S intel-ucode
 ```
+
+---
 
 Then you need to add another line to the arch.conf
 
@@ -696,10 +698,15 @@ $ pip install jsbeautifier
 $ pip install tmuxp
 ```
 
+### Viewing markdown files in the browser
+```shell
+$ pip install grip
+```
 
-### for checking shell scripts
+### For linting code
 ```shell
 $ pacman -S shellcheck
+$ pip install vim-vint
 ```
 
 ### Drawing and designing
