@@ -433,7 +433,7 @@ $ pacman -S zsh zsh-completions
 Finally ssh for remote access
 
 ```shell
-$ pacman -S openssh
+$ pacman -S openssh keychain
 ```
 
 
