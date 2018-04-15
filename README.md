@@ -706,6 +706,7 @@ $ pip install grip
 ### For linting code
 ```shell
 $ pacman -S shellcheck
+$ pacman -S python-pylint
 $ pip install vim-vint
 ```
 
