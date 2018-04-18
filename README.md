@@ -301,7 +301,14 @@ Then you need to add another line to the arch.conf
 $ sudo vim /boot/loader/entries/arch.conf
 ```
 
-Add the line "initrd /intel-ucode.img" before "initrd /initramfs-linux.img"
+Add the intel-ucode image:
+
+```ini
+title Arch Linux
+linux /vmlinuz-linux
+initrd /intel-ucode.img
+initrd /initramfs-linux.img
+```
 
 ---
 
