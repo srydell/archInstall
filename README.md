@@ -15,12 +15,10 @@ Make sure that you have an ethernet cable and that EFI mode is set through BIOS.
 $ ping -c 3 google.com
 ```
 
-
 ### Check for efi variables. Should spit out a list
 ```shell
 $ efivar -l
 ```
-
 
 ## Disk partitioning
 
@@ -32,14 +30,16 @@ I have a Windows install on the same disk. We will create a root partition, a bo
 $ lsblk
 ```
 
-This should give you a list of partitions. I have a ssd so for me is says:
+This should give you a list of partitions. It should say something like:
+
 sda
 sda1
 sda2
 sda3
 sda4
 sda5
-These are refered to as /dev/sdaN, where N is 1-5. The first four is Windows partitions, so the fifth will become the first associated with Linux.
+
+The first four in my case are the Windows partitions, so the fifth will become the first associated with Linux.
 
 ### Create disk partitions for Linux.
 
@@ -47,9 +47,14 @@ These are refered to as /dev/sdaN, where N is 1-5. The first four is Windows par
 $ cgdisk /dev/sda
 ```
 
-You will be presented with a text based program to partition /dev/sda. Select the Partition Type *free space* and press New. Press Enter to choose the default start sector. Write '1024MiB' and choose code 'EF00' for EFI system. Name this partition 'boot'.
-Make another partition for swap space. The size depends on your amount of RAM. For me, since I have 16 GiB I can safely choose 8GiB of swap space. The code for swap is '8200', and name is 'swap'.
-Make one last partition with the rest of the sectors (press Enter two times to default to all sectors) and the default code '8300' and call it 'root'.
+You will be presented with a text based program to partition /dev/sda. Select the Partition Type *free space* and press New. Press Enter to choose the default start sector. Write '1024MiB' and choose code 'EF00' for EFI system. Name this partition 'boot'. Repeat this until you have the folowing:
+
+* Size: 1024MiB, Code: EF00, Name: boot
+* Size: 8GiB, Code: 8200, Name: swap
+* Size: 25GiB, Code: 8300, Name: root
+* Size: -, Code: 8300, Name: home
+
+To make the home partition, just press enter when asked for size to get the remaining space on the disk. I recommend using a separate partition for root where all applications are stored. This way if you ever corrupt your system, you can just reinstall the root partition.
 Take note of which partition is stored on which number.
 You can now press Write and then Quit to exit the application.
 
@@ -60,9 +65,10 @@ $ mkfs.fat -F32 /dev/sda5
 $ mkswap /dev/sda6
 $ swapon /dev/sda6
 $ mkfs.ext4 /dev/sda7
+$ mkfs.ext4 /dev/sda8
 ```
 
-This will create a bootable FAT32 on sda5. Swap on sda6, and ext4 file system on sda7.
+This will create a bootable FAT32 on sda5 (boot). Swap on sda6 (swap), and ext4 file system on sda7 and sda8 (root and home).
 
 ## Mount and install Arch
 
@@ -126,7 +132,7 @@ For language create a locale.gen file.
 $ vim /etc/locale.gen
 ```
 
-Uncomment your locale. I uncommented en_US.UTF-8. Generate the locale.
+Uncomment your locale. For example: en_US.UTF-8. Generate the locale.
 
 ```shell
 $ locale-gen
@@ -163,11 +169,15 @@ Set up your hostname.
 $ echo hostName > /etc/hostname
 ```
 
+---
+
 If you have a SSD then you might want to enable TRIM support.
 
 ```shell
 $ systemctl enable fstrim.timer
 ```
+
+---
 
 ### Setup pacman and user configuration
 
@@ -178,8 +188,13 @@ $ vim /etc/pacman.conf
 ```
 
 Here you uncomment the two lines marked as
+
+```ini
+...
 [multilib]
 Include = /etc/pacman.d/mirrorlist
+...
+```
 
 Save the file and update your system
 
@@ -212,10 +227,19 @@ $ EDITOR=vim visudo
 ```
 
 Uncomment
+
+```ini
+...
 %wheel ALL=(ALL) ALL
+...
+```
 
 At the end of the file add
+```ini
+...
 Defaults rootpw
+...
+```
 
 Install the bootloader. First check that EFI variables are mounted.
 
@@ -259,8 +283,6 @@ If you have an intel processor you need to install intel-ucode.
 $ pacman -S intel-ucode
 ```
 
----
-
 Then you need to add another line to the arch.conf
 
 ```shell
@@ -268,6 +290,8 @@ $ sudo vim /boot/loader/entries/arch.conf
 ```
 
 Add the line "initrd /intel-ucode.img" before "initrd /initramfs-linux.img"
+
+---
 
 Now we need to enable dhcpcd at system start.
 
@@ -294,13 +318,19 @@ Some programs need to have headers installed.
 $ sudo pacman -S linux-headers
 ```
 
+---
+
+#### Nvidia drivers
+
+##### Nouveau
+
 I like the open source drivers [Nouveau](https://wiki.archlinux.org/index.php/nouveau) as a driver for Nvidia cards.
 
 ```shell
 $ sudo pacman -S xf86-video-nouveau lib32-mesa
 ```
 
-#### Nvidia proprietary drivers
+##### Proprietary Nvidia drivers
 
 If you want the proprietary drivers you should install the following
 
@@ -348,6 +378,8 @@ When=PostTransaction
 Exec=/usr/bin/mkinitcpio -P
 ```
 
+---
+
 You should now be able to reboot your system. Exit to arch root, unmount all drives and reboot the system.
 
 ```shell
@@ -376,7 +408,6 @@ Make sure that it works.
 $ startx
 ```
 
-
 It should run three terminals and a clock. Your mouse should now work aswell.
 
 ### Optimize your system
@@ -387,13 +418,11 @@ Install ccache to make compiling a lot faster. We will also set up the system to
 $ lscpu
 ```
 
-
-This command should show you a list of information about your cpu. Find the line called "CPU(s): XX". For me XX=12 since I have a AMD Ryzen 5 1600x. Install ccache.
+This command should show you a list of information about your cpu. Find the line called "CPU(s): XX". For example XX=12. Install ccache.
 
 ```shell
 $ sudo pacman -S ccache
 ```
-
 
 Enable ccache and set our flags in makepkg.conf
 
@@ -401,9 +430,16 @@ Enable ccache and set our flags in makepkg.conf
 $ sudo vim /etc/makepkg.conf
 ```
 
+Find the line with "BUILDENV='... !ccache ...'. Remove ! in front of ccache to enable it. Add the number of cores to makeflags. In the end you should have something like:
 
-Find the line with "BUILDENV='... !ccache ...'. Remove ! in front of ccache to enable it. Find the line with "MAKEFLAGS=" and change it into
+```ini
+...
+BUILDENV='... ccache ...'
+...
 MAKEFLAGS="-j13 -l12"
+...
+```
+
 Where -j(XX+1) -lXX, where XX is the number you got from the "lscpu" command earlier.
 
 Utilize the optimization outside of the package managers.
@@ -412,40 +448,34 @@ Utilize the optimization outside of the package managers.
 $ vim ~/.bashrc
 ```
 
-
 Add these lines to the end of the file
+
+```shell
 export PATH="/usr/lib/ccache/bin/:$PATH"
 export MAKEFLAGS="-j13 -l12"
-Where you of course change -j and -l to your values.
+```
 
-Now we can install our terminal emulator. I prefer [urxvt](https://wiki.archlinux.org/index.php/Rxvt-unicode). urxvt-perls are some preferred librarier (url-select, keyboard-select).
+Where you of course change -j and -l to your specific values.
+
+Now we can install our terminal emulator. I prefer [urxvt](https://wiki.archlinux.org/index.php/Rxvt-unicode). urxvt-perls are some utility libraries (url-select, keyboard-select).
 
 ```shell
 $ pacman -S rxvt-unicode urxvt-perls
 ```
 
-
-Download zsh
-
-```shell
-$ pacman -S zsh zsh-completions
-```
-
-
-Finally ssh for remote access
+Also install ssh for remote access
 
 ```shell
 $ pacman -S openssh keychain
 ```
 
-
 ## Install yay for AUR repositories
 
 ### Install git to be able to download yay, and jshon and wget to use it
+
 ```shell
 $ pacman -S git jshon wget
 ```
-
 
 ### Download and install yay
 
@@ -497,12 +527,14 @@ $ pacman -S i3-gaps
 ```
 
 ### Perl scripts to interact with i3
+
 ```shell
 $ pacman -S perl-anyevent-i3 perl-json-xs
 ```
 
 
 ### Set i3 to start on startx command
+
 ```shell
 $ echo "exec i3" > ~/.xinitrc
 ```
@@ -511,199 +543,208 @@ $ echo "exec i3" > ~/.xinitrc
 ## Make the system more user friendly
 
 ### X11 scripting tool
+
 ```shell
 $ pacman -S xdotool
 ```
 
 ### Screen compositor
+
 ```shell
 $ pacman -S compton
 ```
 
 ### Resize font on the fly
+
 ```shell
 $ yay -S urxvt-resize-font-git
 ```
 
+### Fonts
 
-### Font
 ```shell
 $ yay -S ttf-iosevka ttf-croscore
 ```
 
-
 ### Fade out cursor
+
 ```shell
 $ yay -S unclutter-xfixes-git
 ```
 
-
 ### Project indexer
+
 ```shell
 $ pacman -S ctags
 ```
 
-
 ### Terminal multiplexor
+
 ```shell
 $ pacman -S tmux
 ```
 
 
 ### Sound control (jack for sink detection and pavucontrol for GUI overview)
+
 ```shell
 $ pacman -S pulseaudio pulseaudio-jack pavucontrol
 ```
 
-
 ### Configure multiple monitor with arandr. It creates xrandr configuration files from a GUI.
 Save the config file and add it to your i3 config file as an "exec". This way the configuration will be used each time you log in to your system.
+
 ```shell
 $ pacman -S arandr
 ```
 
-
 ### Application launcher
-Start this application with "rofi -show run"
+
 ```shell
 $ yay -S rofi
 ```
 
-
 ### Watching files for changes and running commands on events
+
 ```shell
 $ yay -S entr
 ```
 
-
 ### For setting background
+
 ```shell
 $ pacman -S feh
 ```
 
-
 ### Adjusts the color temperature of your screen
+
 ```shell
 $ pacman -S redshift
 ```
 
-
 ### PDF-reader
+
 ```shell
 $ pacman -S mupdf
 ```
 
-
 ### Browser, (gst for playing youtube videos)
+
 ```shell
 $ pacman -S qutebrowser
 $ pacman -S gst-plugins-{base,good,bad,ugly} gst-libav
 ```
 
-
 ### Password manager
+
 ```shell
 $ pacman -S pass gnupg
 ```
 
-
 ### File manager
+
 ```shell
 $ pacman -S ranger
 ```
 
-
 ### Statur bar
+
 ```shell
 $ yay -S polybar
 ```
 
 ### Polybar need wireless-tools to use eth/wlan modules
+
 ```shell
 $ pacman -S wireless_tools
 ```
 
 ### For tk windows in plotting programs such as matplotlib from python
+
 ```shell
 $ pacman -S tk
 ```
 
-
 ### For youcompleteme's autocompletion windows
+
 ```shell
 $ yay -S ncurses5-compat-libs
 ```
 
-
 ### For latex
+
 ```shell
 $ pacman -S texlive-most texlive-lang
 ```
 
-
 ### For latex compilation
+
 ```shell
 $ yay -S rubber
 ```
 
-
 ### Taskwarrior for task management
+
 ```shell
 $ pacman -S task
 ```
 
-
 ### Maim for screenshots
+
 ```shell
 $ pacman -S maim
 ```
 
-
 ### Changing document format from one to another
+
 ```shell
 $ pacman -S pandoc
 ```
 
-
 ### Node.js and npm for javascript development
+
 ```shell
 $ pacman -S npm
 ```
 
-
 ### tern for javascript autocompletion
+
 ```shell
 $ npm install -g tern
 ```
 
 ### Install package manager for python
+
 ```shell
 $ pacman -S python-pip
 ```
 
 ### For downloading youtube videos and also some fancy mpv i3 scripting
+
 ```shell
 $ pip install youtube-dl
 ```
 
-
 ### For formatting of html, css and javascript
+
 ```shell
 $ pip install jsbeautifier
 ```
 
-
 ### tmux project manager
+
 ```shell
 $ pip install tmuxp
 ```
 
 ### Viewing markdown files in the browser
+
 ```shell
 $ pip install grip
 ```
 
 ### For linting code
+
 ```shell
 $ pacman -S shellcheck
 $ pacman -S python-pylint
@@ -711,7 +752,7 @@ $ pip install vim-vint
 ```
 
 ### Drawing and designing
+
 ```shell
 $ pacman -S blender inkscape gimp
 ```
-
