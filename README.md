@@ -6,6 +6,18 @@ This guide assumes you have a live disk of Arch linux on a usb stick. Otherwise 
 
 Don't forget to disable fast boot in Windows to ensure that files are saved in Windows when switching OS.
 
+Instructions that are specific to a set of hardware/not something every user will want to do are surrounded by bars. An example:
+
+---
+
+Install program only used by coffee drinkers:
+
+```shell
+$ pacman -S pour-me-coffee
+```
+
+---
+
 ## Verifying internet and EFI is set correctly
 
 Make sure that you have an ethernet cable and that EFI mode is set through BIOS.
