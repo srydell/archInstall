@@ -59,7 +59,7 @@ The first four in my case are the Windows partitions, so the fifth will become t
 $ cgdisk /dev/sda
 ```
 
-You will be presented with a text based program to partition /dev/sda. Select the Partition Type *free space* and press New. Press Enter to choose the default start sector. Write '1024MiB' and choose code 'EF00' for EFI system. Name this partition 'boot'. Repeat this until you have the folowing:
+You will be presented with a text based program to partition /dev/sda. Select the Partition Type *free space* and press New. Press Enter to choose the default start sector. Write `1024MiB` and choose code `EF00` for EFI system. Name this partition `boot`. Repeat this until you have the folowing:
 
 * Size: 1024MiB, Code: EF00, Name: boot
 * Size: 8GiB, Code: 8200, Name: swap
@@ -144,7 +144,7 @@ For language create a locale.gen file.
 $ vim /etc/locale.gen
 ```
 
-Uncomment your locale. For example: en_US.UTF-8. Generate the locale.
+Uncomment your locale. For example: `en_US.UTF-8`. Generate the locale.
 
 ```shell
 $ locale-gen
@@ -281,7 +281,7 @@ linux /vmlinuz-linux
 initrd /initramfs-linux.img
 ```
 
-Save and close the file. We need to know our root partition. Mine is sda7. You can see all partition by typing "lblk". Add the root partition PARTUUID to the arch.conf file. This is easiest done by a shell command.
+Save and close the file. We need to know our root partition. Mine is sda7. You can see all partition by typing `lsblk`. Add the root partition PARTUUID to the arch.conf file. This is easiest done by a shell command.
 
 ```shell
 $ echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/sda7) rw" >> /boot/loader/entries/arch.conf
@@ -318,7 +318,7 @@ Now we need to enable dhcpcd at system start.
 $ ip link
 ```
 
-Check for your address. It looks like "enpXXsY".
+Check for your address. It looks like `enpXXsY`.
 
 ```shell
 $ sudo systemctl enable dhcpcd@enpXXsY.service
@@ -341,9 +341,9 @@ $ sudo pacman -S linux-headers
 
 #### Nvidia drivers
 
-##### Nouveau
+##### Open source drivers - Nouveau
 
-I like the open source drivers [Nouveau](https://wiki.archlinux.org/index.php/nouveau) as a driver for Nvidia cards.
+I like the open source drivers [Nouveau](https://wiki.archlinux.org/index.php/nouveau) since they are much easier to install. If you want to play games or use blender and use such gpu intensive programs, you might want to install the proprietary drivers. To install Nouveau with 32 bit support type
 
 ```shell
 $ sudo pacman -S xf86-video-nouveau lib32-mesa
@@ -369,7 +369,7 @@ Add the Nvidia modules to the MODULES entry as
 MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
 ```
 
-Now ensure that these are loaded on boot by adding nvidia-drm.modeset=1 to the root entry in /boot/loader/entries/arch.conf. This line should look something like this when you're done;
+Now ensure that these are loaded on boot by adding `nvidia-drm.modeset=1` to the root entry in /boot/loader/entries/arch.conf. This line should look something like this when you're done;
 
 ```text
 options root=PARTUUID=... rw nvidia-drm.modeset=1
@@ -409,11 +409,13 @@ $ reboot
 
 You should now be able to boot in and see a login screen.
 
+---
 If you are on a laptop you might want touchpad support
 
 ```shell
 $ sudo pacman -S xf86-input-synaptics
 ```
+---
 
 Now install xorg as a background for i3 and mesa for 3d support.
 
@@ -437,7 +439,7 @@ Install ccache to make compiling a lot faster. We will also set up the system to
 $ lscpu
 ```
 
-This command should show you a list of information about your cpu. Find the line called "CPU(s): XX". For example XX=12. Install ccache.
+This command should show you a list of information about your cpu. Find the line called `CPU(s): XX`. For example `XX=12`. Install ccache.
 
 ```shell
 $ sudo pacman -S ccache
@@ -449,7 +451,7 @@ Enable ccache and set our flags in makepkg.conf
 $ sudo vim /etc/makepkg.conf
 ```
 
-Find the line with "BUILDENV='... !ccache ...'. Remove ! in front of ccache to enable it. Add the number of cores to makeflags. In the end you should have something like:
+Find the line with `BUILDENV='... !ccache ...'`. Remove ! in front of ccache to enable it. Add the number of cores to makeflags. In the end you should have something like:
 
 ```ini
 ...
@@ -459,7 +461,7 @@ MAKEFLAGS="-j13 -l12"
 ...
 ```
 
-Where -j(XX+1) -lXX, where XX is the number you got from the "lscpu" command earlier.
+Where `-j(XX+1) -lXX`, where XX is the number you got from the `lscpu` command earlier.
 
 Utilize the optimization outside of the package managers.
 
@@ -476,7 +478,7 @@ export MAKEFLAGS="-j13 -l12"
 
 Where you of course change -j and -l to your specific values.
 
-Now we can install our terminal emulator. I prefer [urxvt](https://wiki.archlinux.org/index.php/Rxvt-unicode). urxvt-perls are some utility libraries (url-select, keyboard-select).
+Now we can install our terminal emulator. I prefer [urxvt](https://wiki.archlinux.org/index.php/Rxvt-unicode). urxvt-perls is a collection of utility libraries (url-select, keyboard-select).
 
 ```shell
 $ pacman -S rxvt-unicode urxvt-perls
