@@ -527,7 +527,7 @@ $ sudo ntpd -qg
 $ sudo hwclock --systohc
 ```
 
-A nice way of keeping track of this is by enabling it to run every time a network interface is available. For NetworkManager, the hooks are called dispatcher scripts, so lets enable them to launch at boot (`--now` starts the service now aswell).
+A nice way of keeping track of this is by enabling it to run every time a network interface is available. For NetworkManager, the hooks are called dispatcher scripts, so lets enable them to launch at boot (`--now` starts the service aswell).
 
 ```shell
 $ systemctl enable --now NetworkManager-dispatcher.service
