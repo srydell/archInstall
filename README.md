@@ -668,16 +668,11 @@ $ pacman -S pass gnupg
 $ pacman -S ranger
 ```
 
-### Statur bar
-
-```shell
-$ yay -S polybar
-```
-
-### Polybar need wireless-tools to use eth/wlan modules
+### Statusbar - Polybar need wireless-tools before compiling to use eth/wlan modules
 
 ```shell
 $ pacman -S wireless_tools
+$ yay -S polybar
 ```
 
 ### For tk windows in plotting programs such as matplotlib from python
