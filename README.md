@@ -613,7 +613,7 @@ $ pacman -S pulseaudio pulseaudio-jack pavucontrol
 ```
 
 ### Configure multiple monitor with arandr. It creates xrandr configuration files from a GUI.
-Save the config file and add it to your i3 config file as an "exec". This way the configuration will be used each time you log in to your system.
+Save the config file and add it to your i3 config file as an `exec`. This way the configuration will be used each time you log in to your system.
 
 ```shell
 $ pacman -S arandr
