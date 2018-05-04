@@ -772,3 +772,9 @@ $ pip install vim-vint
 ```shell
 $ pacman -S blender inkscape gimp
 ```
+
+### Ripgrep as a backend for fuzzy finder fzf (installed via minpac)
+
+```shell
+$ pacman -S ripgrep
+```
