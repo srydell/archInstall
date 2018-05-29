@@ -88,8 +88,9 @@ This will create a bootable FAT32 on sda5 (boot). Swap on sda6 (swap), and ext4 
 
 ```shell
 $ mount /dev/sda7 /mnt
-$ mkdir /mnt/boot
+$ mkdir /mnt/{boot,home}
 $ mount /dev/sda5 /mnt/boot
+$ mount /dev/sda8 /mnt/home
 ```
 
 ### Setting up Arch repository mirrorlist
