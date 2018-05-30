@@ -170,12 +170,6 @@ Set hardware clock to utc
 $ hwclock --systohc --utc
 ```
 
-Synchronize the system clock across the network
-
-```shell
-$ timedatectl set-ntp true
-```
-
 Set up your hostname.
 
 ```shell
@@ -194,7 +188,7 @@ $ systemctl enable fstrim.timer
 
 ### Setup pacman and user configuration
 
-Open pacman.conf and uncomment support for multilib (if you want to install 32bit programs)
+Open `pacman.conf` and uncomment support for multilib (if you want to install 32bit programs)
 
 ```shell
 $ vim /etc/pacman.conf
@@ -370,7 +364,7 @@ Add the Nvidia modules to the MODULES entry as
 MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
 ```
 
-Now ensure that these are loaded on boot by adding `nvidia-drm.modeset=1` to the root entry in /boot/loader/entries/arch.conf. This line should look something like this when you're done;
+Now ensure that these are loaded on boot by adding `nvidia-drm.modeset=1` to the root entry in `/boot/loader/entries/arch.conf`. This line should look something like this when you're done;
 
 ```text
 options root=PARTUUID=... rw nvidia-drm.modeset=1
