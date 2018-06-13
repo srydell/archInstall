@@ -760,6 +760,7 @@ $ pip install grip
 $ pacman -S shellcheck
 $ pacman -S python-pylint
 $ pip install vim-vint
+$ pip install proselint
 ```
 
 ### Drawing and designing
