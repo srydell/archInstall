@@ -647,8 +647,8 @@ $ pacman -S mupdf
 ### Browser, (gst for playing youtube videos)
 
 ```shell
-$ pacman -S qutebrowser
 $ pacman -S gst-plugins-{base,good,bad,ugly} gst-libav
+$ pacman -S qutebrowser firefox-developer-edition
 ```
 
 ### Password manager
