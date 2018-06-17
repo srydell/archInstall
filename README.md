@@ -759,6 +759,7 @@ $ pip install grip
 ```shell
 $ pacman -S shellcheck
 $ pacman -S python-pylint
+$ pacman -S cppcheck
 $ pip install vim-vint
 $ pip install proselint
 ```
